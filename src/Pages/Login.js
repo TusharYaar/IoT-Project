@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, Link as RouterLink } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import LoadingButton from "@mui/lab/LoadingButton";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import FormControl from "@mui/material/FormControl";
@@ -52,7 +53,6 @@ const Login = () => {
   return (
     <Container>
       <Typography variant="h2">IoT Project</Typography>
-
       <Box justifyContent="center" alignItems="center" display="flex">
         <Box width={"100%"} maxWidth={600}>
           <Box m={4}>
@@ -72,7 +72,7 @@ const Login = () => {
               />
             </FormControl>
           </Box>
-          <Box m={4}>
+          <Box mx={4}>
             <FormControl fullWidth>
               <InputLabel htmlFor="password" error={loginError.length > 0}>
                 PASSWORD
@@ -102,6 +102,22 @@ const Login = () => {
                 <FormHelperText error>{loginError}</FormHelperText>
               )}
             </FormControl>
+          </Box>
+          <Box
+            mx={4}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Link
+              to="/forgot-password"
+              component={RouterLink}
+              underline="always"
+            >
+              <Typography variant="subtitle2">Forgot Password?</Typography>
+            </Link>
           </Box>
           <Box m={4}>
             <LoadingButton

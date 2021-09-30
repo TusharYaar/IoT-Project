@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 const AuthContext = React.createContext();
@@ -28,7 +29,6 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
-  // console.log(a);
   const loginWithEmail = async (email, password) => {
     try {
       const userCred = await signInWithEmailAndPassword(
@@ -38,6 +38,15 @@ export function AuthProvider({ children }) {
       );
       setCurrentUser(userCred.user);
       return userCred.user;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const sendResetEmail = async (email) => {
+    try {
+      await sendPasswordResetEmail(firebaseAuth, email);
+      return true;
     } catch (error) {
       throw new Error(error);
     }
@@ -87,6 +96,7 @@ export function AuthProvider({ children }) {
     logOut,
     // forgotPassword,
     // signInWithGoogle,
+    sendResetEmail,
     setCurrentUser,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

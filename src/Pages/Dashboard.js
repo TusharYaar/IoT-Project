@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { CssBaseline, Typography } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import Sidebar from "../Components/Sidebar";
 const Dashboard = () => {
