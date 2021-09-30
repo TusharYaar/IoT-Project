@@ -1,6 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 import { firebaseAuth } from "../firebase";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 
 const AuthContext = React.createContext();
 
@@ -49,9 +53,9 @@ export function AuthProvider({ children }) {
   //         return true;
   //   return false;
   // }
-  // const logOut = () => {
-  //   return auth.signOut();
-  // };
+  const logOut = () => {
+    return signOut(firebaseAuth);
+  };
   // const forgotPassword = (email) => {
   //   return auth.sendPasswordResetEmail(email);
   // };
@@ -80,7 +84,7 @@ export function AuthProvider({ children }) {
     // isUser,
     loginWithEmail,
     // signupWithEmail,
-    // logOut,
+    logOut,
     // forgotPassword,
     // signInWithGoogle,
     setCurrentUser,
