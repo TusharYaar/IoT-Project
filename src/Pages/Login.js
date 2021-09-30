@@ -29,7 +29,7 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser.uid) {
       history.replace(from);
     }
   }, [currentUser, from, history]);
@@ -106,7 +106,7 @@ const Login = () => {
           <Box m={4}>
             <LoadingButton
               onClick={handleLogin}
-              loading={loading}
+              loading={loading || !currentUser.initialized}
               loadingIndicator="Loading..."
               variant="contained"
               fullWidth
