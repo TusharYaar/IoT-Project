@@ -11,10 +11,9 @@ Made with `create-react-app`
 1. after downloading the project `cd` into the folder
 2. Run `npm install`
 3. Place `.env.local in the root folder`
-4. place the `firebase.js file inside src folder`
-5. Run `npm start`
+4. Run `npm start`
 
-## Available Scripts
+## Available Script
 
 ### `npm start`
 
