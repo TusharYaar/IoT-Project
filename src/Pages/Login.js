@@ -15,13 +15,14 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PersonIcon from "@mui/icons-material/Person";
-
+import GoogleIcon from "@mui/icons-material/Google";
+import Divider from "@mui/material/Divider";
 import { useAuth } from "../Context/MyContext";
 const Login = () => {
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
-  const { currentUser, loginWithEmail } = useAuth();
+  const { currentUser, loginWithEmail, signInWithGoogle } = useAuth();
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -50,6 +51,17 @@ const Login = () => {
       setLoading(false);
     }
   };
+  const handleGoogleLogin = async () => {
+    setLoginError("");
+    setLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      setLoginError(error.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <Container>
       <Typography variant="h2">IoT Project</Typography>
@@ -128,6 +140,20 @@ const Login = () => {
               fullWidth
             >
               Login
+            </LoadingButton>
+          </Box>
+          <Divider />
+          <Box m={4}>
+            <LoadingButton
+              loading={loading || !currentUser.initialized}
+              loadingIndicator="Loading..."
+              fullWidth
+              variant="outlined"
+              onClick={handleGoogleLogin}
+              startIcon={<GoogleIcon />}
+              color="primary"
+            >
+              Login with Google
             </LoadingButton>
           </Box>
         </Box>
