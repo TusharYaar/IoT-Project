@@ -19,6 +19,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState({
     uid: null,
     initialized: false,
+    projects: [],
   });
   const googleProvider = new GoogleAuthProvider();
 
@@ -34,11 +35,7 @@ export function AuthProvider({ children }) {
 
   const loginWithEmail = async (email, password) => {
     try {
-      const userCred = await signInWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
-      );
+      const userCred = await signInWithEmailAndPassword(firebaseAuth, email, password);
       setCurrentUser({ ...userCred.user, initialized: true });
       return userCred.user;
     } catch (error) {
@@ -54,9 +51,6 @@ export function AuthProvider({ children }) {
       throw new Error(error);
     }
   };
-  // const signupWithEmail = (email, password) => {
-  //   return auth.createUserWithEmailAndPassword(email, password)
-  // }
   const signInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(firebaseAuth, googleProvider);
