@@ -4,13 +4,16 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 
 import ShowGraphs from "../Components/ShowGraphs";
+import DeleteModal from "./DeleteModal";
 
-const ShowProject = ({ project }) => {
+const ShowProject = ({ project, deleteProject }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [feeds, setFeeds] = useState([]);
   const [error, setError] = useState("");
+  const [deleteModel, setDeleteModel] = useState(false);
 
   const fetchFeeds = useCallback(async () => {
     try {
@@ -34,12 +37,35 @@ const ShowProject = ({ project }) => {
     }
   }, [fetchFeeds, project]);
 
+  const handleDelete = () => {
+    setDeleteModel(true);
+  };
+  const closeDeleteModal = () => {
+    setDeleteModel(false);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Typography variant="h5">{project.name}</Typography>
-      <Typography variant="caption" component="span">
-        {project.channelId}
-      </Typography>
+      <DeleteModal
+        open={deleteModel}
+        onClose={closeDeleteModal}
+        id={project.id}
+        name={project.name}
+        deleteProject={deleteProject}
+      />
+      <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: "row", alignItems: "center" }}>
+        <Box sx={{ justifyContent: "space-between", flexDirection: "column", display: "inline-flex" }}>
+          <Typography variant="h5" component="span">
+            {project.name}
+          </Typography>
+          <Typography variant="caption" component="span">
+            {project.channelId}
+          </Typography>
+        </Box>
+        <Button onClick={handleDelete} color="error">
+          Delete
+        </Button>
+      </Box>
       <Divider />
       <Box sx={{ width: "100%", p: 3 }}>
         {isLoading && <LinearProgress />}

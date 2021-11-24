@@ -27,7 +27,7 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
   const { currentUser } = useAuth();
   const [details, setDetails] = useState({
     readAPIKey: "1LFJHJ3CX6JSKDFE",
-    writeAPIKey: "1LFJHJ3CX6JSKDFE",
+    writeAPIKey: "4UP5W9KI2UN09NIU",
     channelId: "1575704",
   });
   const [status, setStatus] = useState("check");
@@ -72,7 +72,7 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
       setIsLoading(false);
       setDetails({
         readAPIKey: "1LFJHJ3CX6JSKDFE",
-        writeAPIKey: "1LFJHJ3CX6JSKDFE",
+        writeAPIKey: "4UP5W9KI2UN09NIU",
         channelId: "1575704",
       });
       addNewProject({ ...project, id: projectRef.id });
@@ -85,11 +85,7 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={handleCloseModel}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description">
+    <Modal open={open} onClose={handleCloseModel}>
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Add A device

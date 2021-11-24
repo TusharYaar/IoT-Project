@@ -50,6 +50,10 @@ const Dashboard = () => {
   const addNewProject = (project) => {
     setAllProjects([...allProjects, project]);
   };
+  const deleteProject = (project) => {
+    setActiveProject(null);
+    setAllProjects(allProjects.filter((p) => p.id !== project));
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -67,7 +71,12 @@ const Dashboard = () => {
               Select a project to view graphs
             </Typography>
           )}
-          {activeProject && <ShowProject project={allProjects.find((project) => project.id === activeProject)} />}
+          {activeProject && (
+            <ShowProject
+              project={allProjects.find((project) => project.id === activeProject)}
+              deleteProject={deleteProject}
+            />
+          )}
         </Box>
       </Box>
     </Box>
