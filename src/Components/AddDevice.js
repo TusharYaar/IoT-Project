@@ -2,11 +2,14 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-
 import Button from "@mui/material/Button";
 
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { firebaseDB } from "../firebase";
 import AddDeviceForm from "./AddDeviceForm";
 import ShowDeviceDetails from "./ShowDeviceDetails";
+
+import { useAuth } from "../Context/MyContext";
 
 const style = {
   position: "absolute",
@@ -21,6 +24,7 @@ const style = {
 };
 
 const AddDevice = ({ open, handleCloseModel }) => {
+  const { currentUser } = useAuth();
   const [details, setDetails] = useState({
     readAPIKey: "1LFJHJ3CX6JSKDFE",
     writeAPIKey: "1LFJHJ3CX6JSKDFE",
@@ -32,7 +36,7 @@ const AddDevice = ({ open, handleCloseModel }) => {
   const handleChange = (e) => {
     setDetails({ ...details, [e.target.name]: e.target.value });
   };
-  const handleButtonClick = async () => {
+  const handleCheckDevice = async () => {
     try {
       setStatus("checking");
       setIsLoading(true);
@@ -40,7 +44,6 @@ const AddDevice = ({ open, handleCloseModel }) => {
         `https://api.thingspeak.com/channels/${details.channelId}/feeds.json?api_key=${details.readAPIKey}`
       );
       const { channel } = await response.json();
-      console.log(channel);
       if (channel.id) {
         delete channel.id;
         delete channel.updated_at;
@@ -51,6 +54,30 @@ const AddDevice = ({ open, handleCloseModel }) => {
     } catch (error) {
       setStatus("error");
     } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddDevice = async () => {
+    try {
+      setIsLoading(true);
+      await addDoc(collection(firebaseDB, "projects"), {
+        ...details,
+        uid: currentUser.uid,
+        email: currentUser.email,
+        createdAt: Timestamp.now(),
+      });
+
+      setIsLoading(false);
+      setDetails({
+        readAPIKey: "1LFJHJ3CX6JSKDFE",
+        writeAPIKey: "1LFJHJ3CX6JSKDFE",
+        channelId: "1575704",
+      });
+      handleCloseModel();
+    } catch (error) {
+      console.log(error);
+      setStatus("error");
       setIsLoading(false);
     }
   };
@@ -80,7 +107,7 @@ const AddDevice = ({ open, handleCloseModel }) => {
           aria-label="Add Device"
           fullWidth
           disabled={isLoading}
-          onClick={handleButtonClick}>
+          onClick={status !== "add device" ? handleCheckDevice : handleAddDevice}>
           {status}
         </Button>
       </Box>
