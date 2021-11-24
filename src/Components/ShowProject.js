@@ -14,6 +14,8 @@ const ShowProject = ({ project }) => {
 
   const fetchFeeds = useCallback(async () => {
     try {
+      setIsLoading(true);
+      setError("");
       const response = await fetch(
         `https://api.thingspeak.com/channels/${project.channelId}/feeds.json?api_key=${project.readAPIKey}`
       );
@@ -28,8 +30,6 @@ const ShowProject = ({ project }) => {
 
   useEffect(() => {
     if (project) {
-      setIsLoading(true);
-      setError("");
       fetchFeeds();
     }
   }, [fetchFeeds, project]);
@@ -49,7 +49,7 @@ const ShowProject = ({ project }) => {
             No feeds found, please use the sensor for some time
           </Typography>
         )}
-        {!isLoading && feeds.length > 0 && <ShowGraphs feeds={feeds} channel={project} />}
+        {!isLoading && feeds.length > 0 && <ShowGraphs feeds={feeds} channel={project} fetchFeeds={fetchFeeds} />}
       </Box>
     </Box>
   );
