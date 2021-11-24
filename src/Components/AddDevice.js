@@ -23,7 +23,7 @@ const style = {
   p: 3,
 };
 
-const AddDevice = ({ open, handleCloseModel }) => {
+const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
   const { currentUser } = useAuth();
   const [details, setDetails] = useState({
     readAPIKey: "1LFJHJ3CX6JSKDFE",
@@ -61,12 +61,13 @@ const AddDevice = ({ open, handleCloseModel }) => {
   const handleAddDevice = async () => {
     try {
       setIsLoading(true);
-      await addDoc(collection(firebaseDB, "projects"), {
+      const project = {
         ...details,
         uid: currentUser.uid,
         email: currentUser.email,
         projectCreatedAt: Timestamp.now(),
-      });
+      };
+      const projectRef = await addDoc(collection(firebaseDB, "projects"), project);
 
       setIsLoading(false);
       setDetails({
@@ -74,6 +75,7 @@ const AddDevice = ({ open, handleCloseModel }) => {
         writeAPIKey: "1LFJHJ3CX6JSKDFE",
         channelId: "1575704",
       });
+      addNewProject({ ...project, id: projectRef.id });
       handleCloseModel();
     } catch (error) {
       console.log(error);

@@ -47,10 +47,14 @@ const Dashboard = () => {
     }
   }, [currentUser, getProjects]);
 
+  const addNewProject = (project) => {
+    setAllProjects([...allProjects, project]);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AddDevice open={openModal} handleCloseModel={handleCloseModel} />
+      <AddDevice open={openModal} handleCloseModel={handleCloseModel} addNewProject={addNewProject} />
       <Sidebar handleOpenModel={handleOpenModel} projects={allProjects} changeActiveProject={changeActiveProject} />
       <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", p: 2 }}>
         <Typography variant="caption" component="span">
