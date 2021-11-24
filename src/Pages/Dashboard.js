@@ -11,10 +11,13 @@ import { firebaseDB } from "../firebase";
 import { useAuth } from "../Context/MyContext";
 
 import AddDevice from "../Components/AddDevice";
+import ShowProject from "../Components/ShowProject";
 
 const Dashboard = () => {
   const { currentUser } = useAuth();
   const [openModal, setOpenModal] = useState(false);
+  const [allProjects, setAllProjects] = useState([]);
+  const [activeProject, setActiveProject] = useState(null);
 
   const handleOpenModel = () => {
     setOpenModal(true);
@@ -22,12 +25,19 @@ const Dashboard = () => {
   const handleCloseModel = () => {
     setOpenModal(false);
   };
+  const changeActiveProject = (id) => {
+    setActiveProject(id);
+  };
 
   const getProjects = useCallback(async () => {
     if (currentUser.uid) {
-      const q = query(collection(firebaseDB, "projects"), where("createdBy", "==", currentUser.uid));
-      const projects = await getDocs(q);
-      console.log(projects);
+      const q = query(collection(firebaseDB, "projects"), where("uid", "==", currentUser.uid));
+      const response = await getDocs(q);
+      const projects = [];
+      response.forEach((doc) => {
+        projects.push({ ...doc.data(), id: doc.id });
+      });
+      setAllProjects(projects);
     }
   }, [currentUser.uid]);
 
@@ -41,13 +51,20 @@ const Dashboard = () => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AddDevice open={openModal} handleCloseModel={handleCloseModel} />
-      <Sidebar handleOpenModel={handleOpenModel} />
-      <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}>
+      <Sidebar handleOpenModel={handleOpenModel} projects={allProjects} changeActiveProject={changeActiveProject} />
+      <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", p: 2 }}>
         <Typography variant="caption" component="span">
           Logged in as:
+          <Typography variant="subtitle2">{currentUser.email}</Typography>
         </Typography>
-
-        <Typography variant="subtitle2">{currentUser.uid}</Typography>
+        <Box sx={{ display: "flex", mt: 2, flexGrow: 1 }}>
+          {!activeProject && (
+            <Typography variant="h5" align="center">
+              Select a project to view graphs
+            </Typography>
+          )}
+          {activeProject && <ShowProject project={allProjects.find((project) => project.id === activeProject)} />}
+        </Box>
       </Box>
     </Box>
   );
