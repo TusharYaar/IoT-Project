@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -48,7 +49,7 @@ const ShowProject = ({ project }) => {
             No feeds found, please use the sensor for some time
           </Typography>
         )}
-        {!isLoading && feeds.length > 0 && <ShowGraphs />}
+        {!isLoading && feeds.length > 0 && <ShowGraphs feeds={feeds} channel={project} />}
       </Box>
     </Box>
   );

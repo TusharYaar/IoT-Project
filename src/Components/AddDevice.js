@@ -65,7 +65,7 @@ const AddDevice = ({ open, handleCloseModel }) => {
         ...details,
         uid: currentUser.uid,
         email: currentUser.email,
-        createdAt: Timestamp.now(),
+        projectCreatedAt: Timestamp.now(),
       });
 
       setIsLoading(false);
