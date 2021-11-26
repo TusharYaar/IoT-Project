@@ -149,8 +149,8 @@ const ShowGraphs = ({ feeds, channel, fetchFeeds }) => {
           <Line data={allFieldsData.data} options={allFieldsData.options} />
         </Paper>
       )}
-      {channel.modules && channel.modules.length > 0 && <ShowModules channel={channel} />}
-      {<ShowModules channel={channel} feeds={feeds} />}
+      {/* {channel.modules && channel.modules.length > 0 && <ShowModules channel={channel} />}? */}
+      {feeds.length && channel.modules && channel.modules.length > 0 && <ShowModules channel={channel} feeds={feeds} />}
     </Box>
   );
 };
