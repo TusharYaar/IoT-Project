@@ -8,12 +8,14 @@ import Button from "@mui/material/Button";
 
 import ShowGraphs from "../Components/ShowGraphs";
 import DeleteModal from "./DeleteModal";
+import AddModuleModal from "./AddModule";
 
 const ShowProject = ({ project, deleteProject }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [feeds, setFeeds] = useState([]);
   const [error, setError] = useState("");
   const [deleteModel, setDeleteModel] = useState(false);
+  const [moduleModal, setModuleModal] = useState(false);
 
   const fetchFeeds = useCallback(async () => {
     try {
@@ -44,6 +46,14 @@ const ShowProject = ({ project, deleteProject }) => {
     setDeleteModel(false);
   };
 
+  const openModuleModule = () => {
+    setModuleModal(true);
+  };
+
+  const closeModuleModal = () => {
+    setModuleModal(false);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <DeleteModal
@@ -53,6 +63,7 @@ const ShowProject = ({ project, deleteProject }) => {
         name={project.name}
         deleteProject={deleteProject}
       />
+      <AddModuleModal open={moduleModal} onClose={closeModuleModal} project={project} />
       <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: "row", alignItems: "center" }}>
         <Box sx={{ justifyContent: "space-between", flexDirection: "column", display: "inline-flex" }}>
           <Typography variant="h5" component="span">
@@ -62,9 +73,14 @@ const ShowProject = ({ project, deleteProject }) => {
             {project.channelId}
           </Typography>
         </Box>
-        <Button onClick={handleDelete} color="error">
-          Delete
-        </Button>
+        <Box>
+          <Button variant="outlined" onClick={openModuleModule} sx={{ mx: 2 }}>
+            Add Module
+          </Button>
+          <Button onClick={handleDelete} color="error">
+            Delete
+          </Button>
+        </Box>
       </Box>
       <Divider />
       <Box sx={{ width: "100%", p: 3 }}>
