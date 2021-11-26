@@ -50,6 +50,7 @@ const Sidebar = ({ handleOpenModel, projects, changeActiveProject }) => {
             flexGrow: 1,
             flexDirection: "column",
             alignItems: "center",
+            overflow: "auto",
           }}>
           <Typography variant="h6" align="center" sx={{ mb: 1 }}>
             Your Projects

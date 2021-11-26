@@ -32,6 +32,7 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
   });
   const [status, setStatus] = useState("check");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setDetails({ ...details, [e.target.name]: e.target.value });
@@ -52,6 +53,7 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
         setStatus("add device");
       }
     } catch (error) {
+      setError(error.message);
       setStatus("error");
     } finally {
       setIsLoading(false);
@@ -60,6 +62,7 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
 
   const handleAddDevice = async () => {
     try {
+      setError("");
       setIsLoading(true);
       const project = {
         ...details,
@@ -68,18 +71,18 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
         projectCreatedAt: Timestamp.now(),
       };
       const projectRef = await addDoc(collection(firebaseDB, "projects"), project);
-
       setIsLoading(false);
       setDetails({
         readAPIKey: "1LFJHJ3CX6JSKDFE",
         writeAPIKey: "4UP5W9KI2UN09NIU",
         channelId: "1575704",
       });
+      setStatus("check");
       addNewProject({ ...project, id: projectRef.id });
       handleCloseModel();
     } catch (error) {
       console.log(error);
-      setStatus("error");
+      setError(error.message);
       setIsLoading(false);
     }
   };
@@ -93,6 +96,11 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           You can add a device by adding its name, channelId and keys.
         </Typography>
+        {error.length > 0 && (
+          <Typography variant="caption" sx={{ color: "red" }}>
+            {error}
+          </Typography>
+        )}
         {status !== "add device" ? (
           <AddDeviceForm details={details} handleChange={handleChange} isLoading={isLoading} />
         ) : (
