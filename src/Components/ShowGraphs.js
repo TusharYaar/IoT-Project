@@ -17,6 +17,8 @@ import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
+import ShowModules from "./ShowModules";
+
 import { format, parseJSON } from "date-fns";
 
 const FIELDS = ["field1", "field2", "field3", "field4", "field5", "field6", "field7", "field8"];
@@ -147,6 +149,8 @@ const ShowGraphs = ({ feeds, channel, fetchFeeds }) => {
           <Line data={allFieldsData.data} options={allFieldsData.options} />
         </Paper>
       )}
+      {channel.modules && channel.modules.length > 0 && <ShowModules channel={channel} />}
+      {<ShowModules channel={channel} feeds={feeds} />}
     </Box>
   );
 };

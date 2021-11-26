@@ -69,6 +69,7 @@ const AddDevice = ({ open, handleCloseModel, addNewProject }) => {
         uid: currentUser.uid,
         email: currentUser.email,
         projectCreatedAt: Timestamp.now(),
+        modules: [],
       };
       const projectRef = await addDoc(collection(firebaseDB, "projects"), project);
       setIsLoading(false);
