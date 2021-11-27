@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [openModal, setOpenModal] = useState(false);
   const [allProjects, setAllProjects] = useState([]);
   const [activeProject, setActiveProject] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenModel = () => {
     setOpenModal(true);
@@ -31,6 +32,7 @@ const Dashboard = () => {
 
   const getProjects = useCallback(async () => {
     if (currentUser.uid) {
+      setIsLoading(true);
       const q = query(collection(firebaseDB, "projects"), where("uid", "==", currentUser.uid));
       const response = await getDocs(q);
       const projects = [];
@@ -38,6 +40,7 @@ const Dashboard = () => {
         projects.push({ ...doc.data(), id: doc.id });
       });
       setAllProjects(projects);
+      setIsLoading(false);
     }
   }, [currentUser.uid]);
 
@@ -66,7 +69,12 @@ const Dashboard = () => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AddDevice open={openModal} handleCloseModel={handleCloseModel} addNewProject={addNewProject} />
-      <Sidebar handleOpenModel={handleOpenModel} projects={allProjects} changeActiveProject={changeActiveProject} />
+      <Sidebar
+        handleOpenModel={handleOpenModel}
+        projects={allProjects}
+        changeActiveProject={changeActiveProject}
+        isLoading={isLoading}
+      />
       <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", p: 2 }}>
         <Typography variant="caption" component="span">
           Logged in as:

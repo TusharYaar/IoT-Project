@@ -9,9 +9,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import { useAuth } from "../Context/MyContext";
 
-const Sidebar = ({ handleOpenModel, projects, changeActiveProject }) => {
+const Sidebar = ({ handleOpenModel, projects, changeActiveProject, isLoading }) => {
   const { logOut } = useAuth();
-
   return (
     <Drawer
       sx={{
@@ -55,6 +54,16 @@ const Sidebar = ({ handleOpenModel, projects, changeActiveProject }) => {
           <Typography variant="h6" align="center" sx={{ mb: 1 }}>
             Your Projects
           </Typography>
+          {isLoading && (
+            <Typography variant="caption" align="center">
+              Loading...
+            </Typography>
+          )}
+          {!isLoading && projects.length === 0 && (
+            <Typography variant="caption" align="center">
+              You don't have any projects added
+            </Typography>
+          )}
           {projects.map((project) => (
             <Button key={project.id} size="small" onClick={() => changeActiveProject(project.id)}>
               {project.name}
