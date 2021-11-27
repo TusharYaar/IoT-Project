@@ -6,6 +6,9 @@ import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { firebaseDB } from "../firebase";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,7 +29,7 @@ const MODULES = [
   },
 ];
 
-const AddModule = ({ open, onClose, project, addNewModule }) => {
+const AddModule = ({ open, onClose, project, updateProject }) => {
   if (!project.modules)
     project = {
       ...project,
@@ -34,6 +37,23 @@ const AddModule = ({ open, onClose, project, addNewModule }) => {
     };
   const availableModules = MODULES.filter((m) => !project.modules.find((p) => p === m.value));
   const [module, setModule] = useState(availableModules.length > 0 ? availableModules[0].value : "distance_weight");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAddModule = async () => {
+    setIsLoading(true);
+    try {
+      const docRef = doc(firebaseDB, "projects", project.id);
+      await updateDoc(docRef, {
+        modules: arrayUnion(module),
+      });
+      updateProject({ ...project, modules: project.modules.concat(module) });
+      setIsLoading(false);
+      onClose();
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -57,7 +77,7 @@ const AddModule = ({ open, onClose, project, addNewModule }) => {
             </Select>
           )}
         </Box>
-        <Button onClick={() => {}} variant="contained" disabled={availableModules.length === 0}>
+        <Button onClick={handleAddModule} variant="contained" disabled={availableModules.length === 0 || isLoading}>
           Add Module
         </Button>
       </Box>

@@ -50,6 +50,13 @@ const Dashboard = () => {
   const addNewProject = (project) => {
     setAllProjects([...allProjects, project]);
   };
+  const updateProject = (project) => {
+    const newProjects = allProjects.map((p) => {
+      if (p.id === project.id) return project;
+      return p;
+    });
+    setAllProjects(newProjects);
+  };
   const deleteProject = (project) => {
     setActiveProject(null);
     setAllProjects(allProjects.filter((p) => p.id !== project));
@@ -75,6 +82,7 @@ const Dashboard = () => {
             <ShowProject
               project={allProjects.find((project) => project.id === activeProject)}
               deleteProject={deleteProject}
+              updateProject={updateProject}
             />
           )}
         </Box>

@@ -10,7 +10,7 @@ import ShowGraphs from "../Components/ShowGraphs";
 import DeleteModal from "./DeleteModal";
 import AddModuleModal from "./AddModule";
 
-const ShowProject = ({ project, deleteProject }) => {
+const ShowProject = ({ project, deleteProject, updateProject }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [feeds, setFeeds] = useState([]);
   const [error, setError] = useState("");
@@ -63,7 +63,7 @@ const ShowProject = ({ project, deleteProject }) => {
         name={project.name}
         deleteProject={deleteProject}
       />
-      <AddModuleModal open={moduleModal} onClose={closeModuleModal} project={project} />
+      <AddModuleModal open={moduleModal} onClose={closeModuleModal} project={project} updateProject={updateProject} />
       <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: "row", alignItems: "center" }}>
         <Box sx={{ justifyContent: "space-between", flexDirection: "column", display: "inline-flex" }}>
           <Typography variant="h5" component="span">
