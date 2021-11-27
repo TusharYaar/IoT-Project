@@ -26,8 +26,10 @@ const MODULES = [
     id: 1,
     name: "Distance Weight",
     value: "distance_weight",
+    fields: ["distance", "weight"],
   },
 ];
+const FIELDS = ["field1", "field2", "field3", "field4", "field5", "field6", "field7", "field8"];
 
 const AddModule = ({ open, onClose, project, updateProject }) => {
   if (!project.modules)
@@ -37,11 +39,21 @@ const AddModule = ({ open, onClose, project, updateProject }) => {
     };
   const availableModules = MODULES.filter((m) => !project.modules.find((p) => p === m.value));
   const [module, setModule] = useState(availableModules.length > 0 ? availableModules[0].value : "distance_weight");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddModule = async () => {
-    setIsLoading(true);
     try {
+      setIsLoading(true);
+      let currentModule = MODULES.find((m) => m.value === module);
+      FIELDS.forEach((field) => {
+        if (project[field]) {
+          let index = currentModule.fields.indexOf(project[field].toLowerCase());
+          if (index === -1) return;
+          else currentModule.fields.splice(index, 1);
+        }
+      });
+      if (currentModule.fields.length !== 0) throw new Error("All fields required for module are not present");
       const docRef = doc(firebaseDB, "projects", project.id);
       await updateDoc(docRef, {
         modules: arrayUnion(module),
@@ -51,7 +63,7 @@ const AddModule = ({ open, onClose, project, updateProject }) => {
       onClose();
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
+      setError(error.message);
     }
   };
 
@@ -61,14 +73,19 @@ const AddModule = ({ open, onClose, project, updateProject }) => {
         <Typography variant="h5" align="center">
           Add Module
         </Typography>
-        <Box sx={{ width: "100%", p: 3 }}>
+        <Box sx={{ width: "100%", p: 2 }}>
+          {error.length > 0 && (
+            <Typography variant="subtitle2" color="error" align="center">
+              {error}
+            </Typography>
+          )}
           {availableModules.length === 0 && (
             <Typography variant="body2" align="center">
               No more modules available
             </Typography>
           )}
           {availableModules.length > 0 && (
-            <Select value={module} label="Select Module" onChange={(e) => setModule(e.target.value)}>
+            <Select value={module} label="Select Module" onChange={(e) => setModule(e.target.value)} fullWidth>
               {availableModules.map((m) => (
                 <MenuItem key={m.id} value={m.value}>
                   {m.name}
