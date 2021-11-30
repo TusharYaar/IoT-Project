@@ -18,17 +18,19 @@ import PersonIcon from "@mui/icons-material/Person";
 import GoogleIcon from "@mui/icons-material/Google";
 import Divider from "@mui/material/Divider";
 import { useAuth } from "../Context/MyContext";
-const Login = () => {
+
+const Signup = () => {
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
-  const { currentUser, loginWithEmail, signInWithGoogle } = useAuth();
+  const { currentUser, signupWithEmail, signInWithGoogle } = useAuth();
   const [values, setValues] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
     showPassword: false,
   });
-  const [loginError, setLoginError] = useState("");
+  const [signupError, setSignupError] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (currentUser.uid) {
@@ -41,23 +43,26 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
-  const handleLogin = async () => {
-    setLoginError("");
-    setLoading(true);
+  const handleSignup = async () => {
     try {
-      await loginWithEmail(values.email, values.password);
+      setSignupError("");
+      setLoading(true);
+      if (values.password !== values.confirmPassword || values.password.length < 6) {
+        throw new Error("Passwords do not match or password is less than 6 characters");
+      }
+      await signupWithEmail(values.email, values.password);
     } catch (error) {
-      setLoginError(error.message);
+      setSignupError(error.message);
       setLoading(false);
     }
   };
   const handleGoogleLogin = async () => {
-    setLoginError("");
+    setSignupError("");
     setLoading(true);
     try {
       await signInWithGoogle();
     } catch (error) {
-      setLoginError(error.message);
+      setSignupError(error.message);
       setLoading(false);
     }
   };
@@ -86,11 +91,11 @@ const Login = () => {
           </Box>
           <Box mx={4}>
             <FormControl fullWidth>
-              <InputLabel htmlFor="password" error={loginError.length > 0}>
+              <InputLabel htmlFor="password" error={signupError.length > 0}>
                 PASSWORD
               </InputLabel>
               <OutlinedInput
-                error={loginError.length > 0}
+                error={signupError.length > 0}
                 id="password"
                 label="Password"
                 value={values.password}
@@ -106,7 +111,32 @@ const Login = () => {
                   </InputAdornment>
                 }
               />
-              {loginError.length > 0 && <FormHelperText error>{loginError}</FormHelperText>}
+              {signupError.length > 0 && <FormHelperText error>{signupError}</FormHelperText>}
+            </FormControl>
+          </Box>
+          <Box mx={4} mt={4}>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="confirmPassword" error={signupError.length > 0}>
+                CONFIRM PASSWORD
+              </InputLabel>
+              <OutlinedInput
+                error={signupError.length > 0}
+                id="confirmPassword"
+                label="confirmPassword"
+                value={values.confirmPassword}
+                name="confirmPassword"
+                onChange={handleInput}
+                type={values.showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                startAdornment={
+                  <InputAdornment position="end">
+                    <IconButton aria-label="toggle password visibility" onClick={togglePasswordVisibility} edge="start">
+                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {signupError.length > 0 && <FormHelperText error>{signupError}</FormHelperText>}
             </FormControl>
           </Box>
           <Box
@@ -116,22 +146,18 @@ const Login = () => {
               flexDirection: "row",
               justifyContent: "space-between",
             }}>
-            <Link to="/signup" component={RouterLink} underline="none">
-              <Typography variant="subtitle2">Sign up instead</Typography>
-            </Link>
-
-            <Link to="/forgot-password" component={RouterLink} underline="always">
-              <Typography variant="subtitle2">Forgot Password?</Typography>
+            <Link to="/login" component={RouterLink} underline="none">
+              <Typography variant="subtitle2">Already have an account? Login </Typography>
             </Link>
           </Box>
           <Box m={4}>
             <LoadingButton
-              onClick={handleLogin}
+              onClick={handleSignup}
               loading={loading || !currentUser.initialized}
               loadingIndicator="Loading..."
               variant="contained"
               fullWidth>
-              Login
+              Signup
             </LoadingButton>
           </Box>
           <Divider />
@@ -153,4 +179,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

@@ -1,5 +1,6 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
 import Dashboard from "./Pages/Dashboard";
 import ForgotPassword from "./Pages/ForgotPassword";
 import { useAuth } from "./Context/MyContext";
@@ -11,6 +12,7 @@ const App = () => {
       <Route path="/" exact>
         {currentUser.uid ? <Dashboard /> : <Redirect to="/login" />}
       </Route>
+      <Route path="/signup" exact component={Signup} />
       <Route path="/login" component={Login} />
       <Route path="/forgot-password" component={ForgotPassword} />
     </Switch>

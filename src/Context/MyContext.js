@@ -7,6 +7,7 @@ import {
   sendPasswordResetEmail,
   GoogleAuthProvider,
   signInWithPopup,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 const AuthContext = React.createContext();
@@ -43,6 +44,16 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const signupWithEmail = async (email, password) => {
+    try {
+      const userCred = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      setCurrentUser({ ...userCred.user, initialized: true });
+      return userCred.user;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   const sendResetEmail = async (email) => {
     try {
       await sendPasswordResetEmail(firebaseAuth, email);
@@ -70,6 +81,7 @@ export function AuthProvider({ children }) {
     signInWithGoogle,
     sendResetEmail,
     setCurrentUser,
+    signupWithEmail,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
